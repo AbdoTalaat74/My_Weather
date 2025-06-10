@@ -76,7 +76,7 @@ fun Current.toCurrentWeather(): CurrentWeather {
         rain = this.rain,
         relativeHumidity = this.relativeHumidity,
         surfacePressure = this.surfacePressure,
-        temperature = "${this.temperature} °C",
+        temperature = this.temperature,
         uvIndex = this.uvIndex,
         weatherType = toWeatherType(this.weatherCode, this.isDay),
         windSpeed = this.windSpeed

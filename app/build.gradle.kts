@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compilercommon)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,8 +69,9 @@ dependencies {
     // ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
-    implementation(libs.logback.classic)
-    implementation(libs.ktor.client.serialization) // or your Ktor version
+    implementation (libs.slf4j.api)
+    implementation (libs.logback.android)
+    implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.serialization.kotlinx.json)
 
     // kotlin serialization
@@ -81,13 +84,25 @@ dependencies {
     // koin
     implementation(libs.koin.core)
     implementation(libs.koin.android)
-    implementation ("io.insert-koin:koin-android-compat:4.0.3")
-
+    implementation (libs.koin.android.compat)
+    implementation (libs.koin.androidx.navigation)
+    implementation (libs.koin.androidx.compose)
 
     // datetime
     implementation (libs.kotlinx.datetime)
 
-    // location
-    implementation (libs.play.services.location)
+    implementation(libs.play.services.location) {
+        exclude(group = "com.google.guava", module = "listenablefuture")
+    }
+}
 
+// Add this configuration block to resolve dependency conflicts globally
+configurations.all {
+    resolutionStrategy {
+        // Force a specific version of Guava to avoid conflicts
+        force("com.google.guava:guava:32.1.3-android")
+
+        // Exclude listenablefuture from all dependencies
+        exclude(group = "com.google.guava", module = "listenablefuture")
+    }
 }

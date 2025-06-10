@@ -1,6 +1,9 @@
 [versions]
 agp = "8.10.0"
 koinAndroid = "3.2.0"
+koinAndroidCompat = "4.0.3"
+koinAndroidxCompose = "3.3.0"
+koinAndroidxNavigation = "3.3.0"
 koinAndroidxViewmodel = "3.2.0"
 koinCore = "4.0.3"
 kotlin = "2.0.21"
@@ -20,8 +23,12 @@ ktorSerializationKotlinxJson = "2.3.3"
 lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
+logbackAndroid = "3.0.0"
 logbackClassic = "1.5.13"
 playServicesLocation = "21.3.0"
+compilercommon = "3.2.0-alpha11"
+playServicesMaps = "19.2.0"
+slf4jApi = "2.0.16"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +46,9 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-android-compat = { module = "io.insert-koin:koin-android-compat", version.ref = "koinAndroidCompat" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroidxNavigation" }
 koin-androidx-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinAndroidxViewmodel" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
@@ -49,8 +59,12 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClien
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientSerialization" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
+logback-android = { module = "com.github.tony19:logback-android", version.ref = "logbackAndroid" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackClassic" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+androidx-compilercommon = { group = "androidx.databinding", name = "compilerCommon", version.ref = "compilercommon" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

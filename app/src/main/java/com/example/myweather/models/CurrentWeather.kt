@@ -7,7 +7,7 @@ data class CurrentWeather(
     val rain: Int,
     val relativeHumidity: Int,
     val surfacePressure: Double,
-    val temperature: String,
+    val temperature: Double,
     val uvIndex: Double,
     val weatherType: WeatherType,
     val windSpeed: Double
