@@ -91,6 +91,9 @@ dependencies {
     // datetime
     implementation (libs.kotlinx.datetime)
 
+    // accompanist-system ui controller
+    implementation(libs.accompanist.systemuicontroller)
+
     implementation(libs.play.services.location) {
         exclude(group = "com.google.guava", module = "listenablefuture")
     }

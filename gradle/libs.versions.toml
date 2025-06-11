@@ -1,10 +1,12 @@
 [versions]
+accompanistSystemuicontroller = "0.36.0"
 agp = "8.10.0"
 koinAndroid = "3.2.0"
 koinAndroidCompat = "4.0.3"
 koinAndroidxCompose = "3.3.0"
 koinAndroidxNavigation = "3.3.0"
 koinAndroidxViewmodel = "3.2.0"
+koinAndroidxViewmodelVersion = "3.1.6"
 koinCore = "4.0.3"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
@@ -31,6 +33,7 @@ playServicesMaps = "19.2.0"
 slf4jApi = "2.0.16"
 
 [libraries]
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -50,6 +53,7 @@ koin-android-compat = { module = "io.insert-koin:koin-android-compat", version.r
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroidxNavigation" }
 koin-androidx-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinAndroidxViewmodel" }
+koin-androidx-viewmodel-v316 = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinAndroidxViewmodelVersion" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
