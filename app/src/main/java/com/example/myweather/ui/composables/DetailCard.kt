@@ -58,6 +58,8 @@ fun DetailCard(
                     fontFamily = urbanist,
                     fontWeight = FontWeight.W500,
                     fontSize = 20.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.25.sp,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
@@ -66,6 +68,8 @@ fun DetailCard(
                     fontFamily = urbanist,
                     fontWeight = FontWeight.W400,
                     fontSize = 14.sp,
+                    lineHeight = 14.sp,
+                    letterSpacing = 0.25.sp,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             )

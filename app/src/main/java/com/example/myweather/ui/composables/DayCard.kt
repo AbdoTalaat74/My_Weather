@@ -1,8 +1,8 @@
 package com.example.myweather.ui.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -26,46 +26,54 @@ fun DailyCard(
     modifier: Modifier = Modifier,
     dailyWeather: DailyWeather,
 ) {
-    Row(
-        modifier = modifier
-            .height(61.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+
+        ) {
         Text(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 12.dp),
             text = dailyWeather.dayOfWeek,
             style = TextStyle(
                 fontFamily = urbanist,
                 fontWeight = FontWeight.W400,
                 fontSize = 16.sp,
+                lineHeight = 16.sp,
+                letterSpacing = 0.25.sp,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         )
         Image(
             modifier = Modifier
-                .padding(horizontal = 9.5.dp)
-                .weight(1f),
+                .align(Alignment.Center)
+                .padding(vertical = 8.dp)
+                .height(45.dp),
             painter = painterResource(dailyWeather.weatherType.iconRes),
             contentDescription = "icon"
         )
         TemperatureRangeCard(
-            modifier = Modifier.weight(103 / 91f),
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 12.dp),
             highTemperature = dailyWeather.maxTemperature,
             lowTemperature = dailyWeather.minTemperature
         )
     }
 }
 
+
 @Preview
 @Composable
 private fun Preview() {
     MyWeatherTheme {
-        DailyCard(dailyWeather = DailyWeather(
-            maxTemperature = 25.5,
-            minTemperature = 13.0,
-            dayOfWeek = "Monday",
-            weatherType = WeatherType.Fog
-        ))
+        DailyCard(
+            dailyWeather = DailyWeather(
+                maxTemperature = 25,
+                minTemperature = 13,
+                dayOfWeek = "Monday",
+                weatherType = WeatherType.Fog
+            )
+        )
     }
 }

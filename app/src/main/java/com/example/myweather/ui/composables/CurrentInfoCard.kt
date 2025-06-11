@@ -1,6 +1,7 @@
 package com.example.myweather.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -21,18 +22,20 @@ import com.example.myweather.ui.theme.urbanist
 @Composable
 fun CurrentInfoCard(
     modifier: Modifier = Modifier,
-    temperature: Double,
+    temperature: Int,
     description: String,
-    maxTemperature: Double,
-    minTemperature: Double
+    maxTemperature: Int,
+    minTemperature: Int
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = "${temperature.toInt()}°C",
+            text = "${temperature}°C",
             style = TextStyle(
                 fontFamily = urbanist,
                 fontWeight = FontWeight.W600,
                 fontSize = 64.sp,
+                letterSpacing = 0.25.sp,
+                lineHeight = 64.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         )
@@ -43,20 +46,22 @@ fun CurrentInfoCard(
                 fontFamily = urbanist,
                 fontWeight = FontWeight.W500,
                 fontSize = 16.sp,
+                letterSpacing = 0.25.sp,
+                lineHeight = 16.sp,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         )
         Box(
             modifier = Modifier.background(
                 color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = RoundedCornerShape(100.dp)
-            )
+                shape = RoundedCornerShape(100.dp),
+            ),
+            contentAlignment = Alignment.Center
         ) {
             TemperatureRangeCard(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                 highTemperature = maxTemperature,
                 lowTemperature = minTemperature,
-                fontSize = 16.sp
             )
         }
     }
@@ -67,10 +72,10 @@ fun CurrentInfoCard(
 private fun Preview() {
     MyWeatherTheme {
         CurrentInfoCard(
-            temperature = 24.0,
+            temperature = 24,
             description = "Partly cloudy",
-            maxTemperature = 32.0,
-            minTemperature = 20.0,
+            maxTemperature = 32,
+            minTemperature = 20,
         )
     }
 }

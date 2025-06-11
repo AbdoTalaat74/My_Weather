@@ -23,7 +23,7 @@ import com.example.myweather.ui.theme.urbanist
 @Composable
 fun LocationCard(
     modifier: Modifier = Modifier,
-    locationName: String = "Cairo",
+    locationName: String,
 ) {
     Row(
         modifier = modifier,
@@ -42,6 +42,8 @@ fun LocationCard(
                 fontFamily = urbanist,
                 fontWeight = FontWeight.W500,
                 fontSize = 16.sp,
+                lineHeight = 20.sp,
+                letterSpacing = 0.25.sp,
                 color = MaterialTheme.colorScheme.onSecondary
             )
         )
@@ -52,6 +54,6 @@ fun LocationCard(
 @Composable
 private fun Preview() {
     MyWeatherTheme {
-        LocationCard()
+        LocationCard(locationName = "Cairo")
     }
 }

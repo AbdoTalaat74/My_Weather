@@ -1,4 +1,4 @@
-package com.giraffe.myweatherapp.presentation.composable
+package com.example.myweather.ui.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,7 +47,7 @@ fun HourlyCard(
             modifier = Modifier
                 .height(58.dp)
                 .padding(horizontal = 12.dp)
-                .offset(y = (-12).dp),
+                .offset(y = (-15).dp),
             painter = painterResource(hourlyWeather.weatherType.iconRes),
             contentDescription = "icon"
         )
@@ -57,6 +57,8 @@ fun HourlyCard(
                 fontFamily = urbanist,
                 fontWeight = FontWeight.W500,
                 fontSize = 16.sp,
+                lineHeight = 16.sp,
+                letterSpacing = 0.25.sp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
@@ -67,6 +69,8 @@ fun HourlyCard(
                 fontFamily = urbanist,
                 fontWeight = FontWeight.W500,
                 fontSize = 16.sp,
+                lineHeight = 16.sp,
+                letterSpacing = 0.25.sp,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         )
@@ -80,7 +84,7 @@ private fun Preview() {
     MyWeatherTheme {
         HourlyCard(
             hourlyWeather = HourlyWeather(
-                temperature = 15.5,
+                temperature = 15,
                 time = "18:11",
                 weatherType = WeatherType.OvercastNight
             )

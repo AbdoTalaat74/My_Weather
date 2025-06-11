@@ -1,14 +1,14 @@
 package com.example.myweather.models
 
 data class CurrentWeather(
-    val apparentTemperature: Double,
+    val apparentTemperature: Int,
     val interval: Int,
     val isDay: Boolean,
     val rain: Int,
     val relativeHumidity: Int,
-    val surfacePressure: Double,
-    val temperature: Double,
-    val uvIndex: Double,
+    val surfacePressure: Int,
+    val temperature: Int,
+    val uvIndex: Int,
     val weatherType: WeatherType,
-    val windSpeed: Double
+    val windSpeed: Int
 )

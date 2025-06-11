@@ -70,16 +70,16 @@ fun WeatherResponse.toWeather(): Weather {
 
 fun Current.toCurrentWeather(): CurrentWeather {
     return CurrentWeather(
-        apparentTemperature = this.apparentTemperature,
+        apparentTemperature = this.apparentTemperature.toInt(),
         interval = this.interval,
         isDay = this.isDay != 0,
         rain = this.rain,
         relativeHumidity = this.relativeHumidity,
-        surfacePressure = this.surfacePressure,
-        temperature = this.temperature,
-        uvIndex = this.uvIndex,
+        surfacePressure = this.surfacePressure.toInt(),
+        temperature = this.temperature.toInt(),
+        uvIndex = this.uvIndex.toInt(),
         weatherType = toWeatherType(this.weatherCode, this.isDay),
-        windSpeed = this.windSpeed
+        windSpeed = this.windSpeed.toInt()
     )
 }
 
@@ -88,8 +88,8 @@ fun Daily.toDailyWeather(): List<DailyWeather> {
     for (day in 0..6) {
         dailyWeatherList.add(
             DailyWeather(
-                maxTemperature = this.maxTemperature[day],
-                minTemperature = this.minTemperature[day],
+                maxTemperature = this.maxTemperature[day].toInt(),
+                minTemperature = this.minTemperature[day].toInt(),
                 dayOfWeek = Utils.getWeekDayName(this.date[day]),
                 weatherType = toWeatherType(this.weatherCode[day], 1)
             )
@@ -103,7 +103,7 @@ fun Hourly.toHourlyWeather(): List<HourlyWeather> {
     for (hour in 0..5) {
         hourlyWeatherList.add(
             HourlyWeather(
-                temperature = this.temperature[hour],
+                temperature = this.temperature[hour].toInt(),
                 time = Utils.convertToTime(this.time[hour]),
                 weatherType = toWeatherType(this.weatherCode[hour], this.isDay[hour])
             )

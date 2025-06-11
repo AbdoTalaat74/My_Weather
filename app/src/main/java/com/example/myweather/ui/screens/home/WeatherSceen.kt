@@ -22,20 +22,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,10 +44,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -65,10 +60,9 @@ import com.example.myweather.R
 import com.example.myweather.ui.composables.CurrentInfoCard
 import com.example.myweather.ui.composables.DailyCard
 import com.example.myweather.ui.composables.DetailCard
+import com.example.myweather.ui.composables.HourlyCard
 import com.example.myweather.ui.composables.LocationCard
-import com.example.myweather.ui.theme.darkBlue
 import com.example.myweather.ui.theme.urbanist
-import com.giraffe.myweatherapp.presentation.composable.HourlyCard
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -76,18 +70,18 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
+import kotlin.math.min
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun HomeScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     fusedLocationClient: FusedLocationProviderClient,
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     var cityName by remember { mutableStateOf("Getting location...") }
     var hasLocationPermission by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(true) }
     val weatherState by viewModel.weatherState.collectAsState()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -102,13 +96,11 @@ fun HomeScreen(
                 context = context,
                 onLocationReceived = { city, lat, lng ->
                     cityName = city
-                    isLoading = false
                     viewModel.updateLocationAndGetWeather(lat.toString(), lng.toString())
                 },
                 onError = { error ->
                     Toast.makeText(context, error, Toast.LENGTH_LONG).show()
                     cityName = "Unable to get location"
-                    isLoading = false
                 }
             )
         } else {
@@ -118,7 +110,6 @@ fun HomeScreen(
                 Toast.LENGTH_LONG
             ).show()
             cityName = "Location permission denied"
-            isLoading = false
         }
     }
 
@@ -141,13 +132,11 @@ fun HomeScreen(
                 context = context,
                 onLocationReceived = { city, lat, lng ->
                     cityName = city
-                    isLoading = false
                     viewModel.updateLocationAndGetWeather(lat.toString(), lng.toString())
                 },
                 onError = { error ->
                     Toast.makeText(context, error, Toast.LENGTH_LONG).show()
                     cityName = "Unable to get location"
-                    isLoading = false
                 }
             )
         } else {
@@ -161,26 +150,90 @@ fun HomeScreen(
     }
 
     val scrollState = rememberScrollState()
-    val screenHeightPx =
-        with(LocalDensity.current) { LocalConfiguration.current.screenHeightDp.dp.toPx() }
+
+
+    val  referenceWidth = 360f
+    val  referenceHeight = 640f
+    val  iconLargeWidth = 220.21f
+    val  iconLargeHeight = 200f
+    val  infoCardLargeWidth = 168f
+    val  infoCardLargeHeight = 143f
+    val  iconSmallWidth = 124f
+    val  iconSmallHeight = 112f
+    val  infoCardSmallWidth = 168f
+    val  infoCardSmallHeight = 143f
+
+    val screenHeightDp = with(LocalDensity.current) { LocalConfiguration.current.screenHeightDp.toFloat() }
+    val screenWidthDp = with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.toFloat() }
+
+    val widthScale = screenWidthDp /  referenceWidth
+    val heightScale = screenHeightDp /  referenceHeight
+    val scale = min(widthScale, heightScale)
+
     var isLarge by remember { mutableStateOf(true) }
+
     LaunchedEffect(scrollState.value) {
-        isLarge = !(scrollState.value > screenHeightPx / 9.9)
+        isLarge = !(scrollState.value > screenHeightDp / 9.9)
     }
+
     val animateIconSize by animateSizeAsState(
-        if (isLarge) Size(220.21f, 200f) else Size(124f, 112f)
+        if (isLarge) {
+            Size(
+                width =  iconLargeWidth * scale,
+                height =  iconLargeHeight * scale
+            )
+        } else {
+            Size(
+                width =  iconSmallWidth * scale,
+                height =  iconSmallHeight * scale
+            )
+        }
     )
+
+    val animateInfoCardSize by animateSizeAsState(
+        if (isLarge) {
+            Size(
+                width =  infoCardLargeWidth * scale,
+                height =  infoCardLargeHeight * scale
+            )
+        } else {
+            Size(
+                width =  infoCardSmallWidth * scale,
+                height =  infoCardSmallHeight * scale
+            )
+        }
+    )
+
     val animateIconPosition by animateIntOffsetAsState(
-        if (isLarge) IntOffset(0, 0) else IntOffset(-168, 88)
+        if (isLarge) IntOffset(0, 0) else IntOffset(
+            (screenWidthDp * 0.05f - (screenWidthDp - iconSmallWidth * scale)).toInt(),
+            (screenHeightDp * 0.7f).toInt()
+        )
     )
+
     val animateInfoCardPosition by animateIntOffsetAsState(
-        if (isLarge) IntOffset(0, 0) else IntOffset(168, -(143))
+        if (isLarge) IntOffset(0, 0) else IntOffset(
+            (screenWidthDp - infoCardSmallWidth * scale - screenWidthDp * 0.05f).toInt(),
+            (screenHeightDp * 0.3f).toInt()
+        )
     )
+
     val animateAbove by animateIntOffsetAsState(
-        if (isLarge) IntOffset(0, 0) else IntOffset(0, -(143))
+        if (isLarge) IntOffset(0, 0) else IntOffset(
+            0,
+            (-(screenHeightDp * 0.6f).toInt())
+        )
     )
+
+    val animateContentAbove by animateIntOffsetAsState(
+        if (isLarge) IntOffset(0, 0) else IntOffset(
+            0,
+            (-(screenHeightDp * 0.3f).toInt())
+        )
+    )
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(
                 brush = Brush.verticalGradient(
@@ -192,30 +245,31 @@ fun HomeScreen(
             )
     ) {
         weatherState.weatherInformation?.let { weatherInformation ->
-
-
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
-                    .padding(vertical = 24.dp)
                     .statusBarsPadding()
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LocationCard(
-                    modifier = Modifier.clickable { isLarge = !isLarge },
+                    modifier = Modifier
+                        .clickable {
+                            isLarge = !isLarge
+                        },
                     locationName = cityName
                 )
 
                 Image(
                     modifier = Modifier
-                        .padding(start = 65.dp, end = 65.dp, bottom = 12.dp)
                         .width(animateIconSize.width.dp)
                         .height(animateIconSize.height.dp)
                         .offset {
                             animateIconPosition
                         }
-                        .shadow(150.dp, spotColor = MaterialTheme.colorScheme.surfaceBright),
+                        .offset{
+                            animateAbove
+                        },
                     painter = painterResource(
                         weatherInformation.currentWeather.weatherType.iconRes
                     ),
@@ -223,8 +277,12 @@ fun HomeScreen(
                 )
                 CurrentInfoCard(
                     modifier = Modifier
+                        .width(animateInfoCardSize.width.dp)
+                        .height(animateInfoCardSize.height.dp)
                         .offset {
                             animateInfoCardPosition
+                        }.offset{
+                            animateAbove
                         },
                     temperature = weatherInformation.currentWeather.temperature,
                     description =
@@ -235,22 +293,30 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp, end = 12.dp, top = 24.dp)
-                        .offset { animateAbove },
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 12.dp)
+                        .offset { animateContentAbove }
+                    ,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     DetailCard(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .width((screenWidthDp * 0.3).dp)
+                            .weight(1f),
                         value = "${weatherState.weatherInformation?.currentWeather?.windSpeed} KM/h"
                     )
                     DetailCard(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .width((screenWidthDp * 0.3).dp)
+                            .weight(1f),
                         iconRes = R.drawable.humidity,
                         value = "${weatherState.weatherInformation?.currentWeather?.relativeHumidity}%",
                         label = "Humidity"
                     )
                     DetailCard(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .width((screenWidthDp * 0.3).dp)
+                            .weight(1f),
                         iconRes = R.drawable.rain,
                         value = "${weatherState.weatherInformation?.currentWeather?.rain}%",
                         label = "Rain"
@@ -259,24 +325,32 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp, end = 12.dp, top = 6.dp, bottom = 24.dp)
-                        .offset { animateAbove },
+                        .padding(horizontal = 12.dp)
+                        .padding(top = 6.dp)
+                        .offset { animateContentAbove }
+                    ,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     DetailCard(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .width((screenWidthDp * 0.3).dp)
+                            .weight(1f),
                         iconRes = R.drawable.uv_02,
                         value = "${weatherState.weatherInformation?.currentWeather?.uvIndex}",
                         label = "UV Index"
                     )
                     DetailCard(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .width((screenWidthDp * 0.3).dp)
+                            .weight(1f),
                         iconRes = R.drawable.arrow_down_05,
                         value = "${weatherState.weatherInformation?.currentWeather?.surfacePressure} hPa",
                         label = "Pressure"
                     )
                     DetailCard(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .width((screenWidthDp * 0.3).dp)
+                            .weight(1f),
                         iconRes = R.drawable.temperature,
                         value = "${weatherState.weatherInformation?.currentWeather?.apparentTemperature}°C",
                         label = "Feels like"
@@ -285,20 +359,25 @@ fun HomeScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp, top = 24.dp, bottom = 12.dp)
-                        .offset { animateAbove },
+                        .padding(start = 12.dp)
+                        .padding(top = 24.dp)
+                        .offset { animateContentAbove }
+                    ,
                     text = "Today",
                     style = TextStyle(
                         fontFamily = urbanist,
                         fontWeight = FontWeight.W600,
                         fontSize = 20.sp,
+                        lineHeight = 20.sp,
+                        letterSpacing = 0.25.sp,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 )
                 LazyRow(
                     modifier = Modifier
-                        .padding(bottom = 24.dp)
-                        .offset { animateAbove },
+                        .padding(top = 12.dp)
+                        .offset { animateContentAbove }
+                    ,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp)
                 ) {
@@ -312,45 +391,52 @@ fun HomeScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp, bottom = 12.dp)
-                        .offset { animateAbove },
+                        .padding(top = 24.dp)
+                        .padding(start = 12.dp)
+                        .offset { animateContentAbove }
+                    ,
                     text = "Next 7 days",
                     style = TextStyle(
                         fontFamily = urbanist,
                         fontWeight = FontWeight.W600,
                         fontSize = 20.sp,
+                        lineHeight = 20.sp,
+                        letterSpacing = 0.25.sp,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .offset { animateContentAbove }
+                        .padding(top = 12.dp)
                         .padding(horizontal = 12.dp)
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer,
+                            shape = RoundedCornerShape(24.dp)
+                        )
                         .border(
                             width = 1.dp,
                             color = MaterialTheme.colorScheme.outline,
                             shape = RoundedCornerShape(24.dp)
                         )
-                        .offset { animateAbove }
-                        .background(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            shape = RoundedCornerShape(24.dp)
-                        )
+
+
                 ) {
                     weatherState.weatherInformation?.dailyWeather?.forEachIndexed { index, item ->
                         DailyCard(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                                .fillMaxWidth(),
                             dailyWeather = item
                         )
-                        if (index != weatherState.weatherInformation?.dailyWeather?.size?.minus(1))
+                        if (index != weatherState.weatherInformation?.dailyWeather?.size?.minus(1)) {
                             Spacer(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(1.dp)
-                                    .background(darkBlue.copy(alpha = .08f))
+                                    .background(MaterialTheme.colorScheme.outline)
                             )
+                        }
                     }
                 }
             }
